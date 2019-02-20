@@ -1,17 +1,17 @@
 # Introduction
-This is one of my E-commerce API app implementations. It is written in Java using Spring Boot and Hibernate as the main dependencies.
+This is one of my E-commerce API app implementations. It is written in Golang using go-gonic web framework..
 This is not a finished project by any means, but it has a valid enough shape to be git cloned and studied if you are interested in this topic.
 If you are interested in this project take a look at my other server API implementations I have made with:
 
 - [Node Js + Sequelize](https://github.com/melardev/ApiEcomSequelizeExpress)
 - [Node Js + Bookshelf](https://github.com/melardev/ApiEcomBookshelfExpress)
 - [Node Js + Mongoose](https://github.com/melardev/ApiEcomMongooseExpress)
-- [Django]()
-- [Flask]()
+- [Django](https://github.com/melardev/DjangoRestShopApy)
+- [Flask](https://github.com/melardev/FlaskApiEcommerce)
 - [Java EE Spring Boot and Hibernate](https://github.com/melardev/SBootApiEcomMVCHibernate)
 - [Ruby on Rails](https://github.com/melardev/RailsApiEcommerce)
-- [AspNet Core]()
-- [Laravel]()
+- [AspNet Core](https://github.com/melardev/ApiAspCoreEcommerce)
+- [Laravel](https://github.com/melardev/ApiEcommerceLaravel)
 
 The next projects to come will be:
 - Elixir with phoenix and Ecto
