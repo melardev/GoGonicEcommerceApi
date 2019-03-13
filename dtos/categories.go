@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-func CreateCategoryListDto(categories []models.Category) map[string]interface{} {
+func CreateCategoryListMapDto(categories []models.Category) map[string]interface{} {
 	result := map[string]interface{}{}
 	var t = make([]interface{}, len(categories))
 	for i := 0; i < len(categories); i++ {
@@ -13,6 +13,14 @@ func CreateCategoryListDto(categories []models.Category) map[string]interface{} 
 	}
 	result["categories"] = t
 	return CreateSuccessDto(result)
+}
+
+func CreateCategoryListDto(categories []models.Category) []interface{} {
+	var t = make([]interface{}, len(categories))
+	for i := 0; i < len(categories); i++ {
+		t[i] = CreateCategoryDto(categories[i])
+	}
+	return t
 }
 
 func CreateCategoryDto(category models.Category) map[string]interface{} {

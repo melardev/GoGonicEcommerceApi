@@ -4,10 +4,10 @@ import (
 	"errors"
 	"github.com/gin-gonic/gin"
 	"github.com/melardev/GoGonicEcommerceApi/dtos"
+	"github.com/melardev/GoGonicEcommerceApi/infrastructure"
 	"github.com/melardev/GoGonicEcommerceApi/middlewares"
 	"github.com/melardev/GoGonicEcommerceApi/models"
 	"github.com/melardev/GoGonicEcommerceApi/services"
-	"github.com/melardev/api_blog_app/infrastructure"
 
 	"net/http"
 	"strconv"
@@ -29,7 +29,7 @@ func RegisterCommentRoutes(router *gin.RouterGroup) {
 
 func ListComments(c *gin.Context) {
 	slug := c.Param("slug")
-	database := infrastructure.GetDB()
+	database := infrastructure.GetDb()
 	productId := -1
 
 	err := database.Model(&models.Product{}).Where(&models.Product{Slug: slug}).Select("id").Row().Scan(&productId)
@@ -103,7 +103,7 @@ func DeleteComment(c *gin.Context) {
 
 	id64, err := strconv.ParseUint(c.Param("id"), 10, 32)
 	id := uint(id64)
-	database := infrastructure.GetDB()
+	database := infrastructure.GetDb()
 	var comment models.Comment
 	err = database.Select([]string{"id", "user_id"}).Find(&comment, id).Error
 	if err != nil || comment.ID == 0 {

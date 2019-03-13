@@ -5,8 +5,8 @@ import (
 	"errors"
 	"github.com/gin-gonic/gin"
 	"github.com/gosimple/slug"
+	"github.com/melardev/GoGonicEcommerceApi/infrastructure"
 	"github.com/melardev/GoGonicEcommerceApi/models"
-	"github.com/melardev/api_blog_app/infrastructure"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -103,7 +103,7 @@ func CreateProduct(c *gin.Context) {
 	var categories = make([]models.Category, catCount)
 
 	var rgx = regexp.MustCompile(`\[(.*?)\]`)
-	database := infrastructure.GetDB()
+	database := infrastructure.GetDb()
 	tagPtr := 0
 	catPtr := 0
 

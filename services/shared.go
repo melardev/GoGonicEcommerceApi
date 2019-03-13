@@ -1,17 +1,17 @@
 package services
 
 import (
-	"github.com/melardev/api_blog_app/infrastructure"
+	"github.com/melardev/GoGonicEcommerceApi/infrastructure"
 )
 
 func CreateOne(data interface{}) error {
-	database := infrastructure.GetDB()
+	database := infrastructure.GetDb()
 	err := database.Create(data).Error
 	return err
 }
 
 func SaveOne(data interface{}) error {
-	database := infrastructure.GetDB()
+	database := infrastructure.GetDb()
 	err := database.Save(data).Error
 	return err
 }

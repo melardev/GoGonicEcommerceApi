@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
+	"github.com/melardev/GoGonicEcommerceApi/infrastructure"
 	"github.com/melardev/GoGonicEcommerceApi/models"
-	"github.com/melardev/api_blog_app/infrastructure"
 	"net/http"
 	"os"
 	"strings"
@@ -51,7 +51,7 @@ func UserLoaderMiddleware() gin.HandlerFunc {
 
 					var user models.User
 					if userId != 0 {
-						database := infrastructure.GetDB()
+						database := infrastructure.GetDb()
 						// We always need the Roles to be loaded to make authorization decisions based on Roles
 						database.Preload("Roles").First(&user, userId)
 					}

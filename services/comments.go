@@ -1,8 +1,8 @@
 package services
 
 import (
+	"github.com/melardev/GoGonicEcommerceApi/infrastructure"
 	"github.com/melardev/GoGonicEcommerceApi/models"
-	"github.com/melardev/api_blog_app/infrastructure"
 )
 
 func FetchCommentsPage(productId, page int, page_size int) ([]models.Comment, int) {
@@ -10,7 +10,7 @@ func FetchCommentsPage(productId, page int, page_size int) ([]models.Comment, in
 
 	var comments []models.Comment
 	var totalCommentCount int
-	database := infrastructure.GetDB()
+	database := infrastructure.GetDb()
 	database.Model(&comments).Where(&models.Comment{ProductId: uint(productId)}).Count(&totalCommentCount)
 	database.Where(&models.Comment{ProductId: uint(productId)}).
 		Offset((page - 1) * page_size).Limit(page_size).
@@ -50,7 +50,7 @@ func FetchCommentById(id int, includes ...bool) models.Comment {
 	if len(includes) > 1 {
 		includeProduct = includes[1]
 	}
-	database := infrastructure.GetDB()
+	database := infrastructure.GetDb()
 	var comment models.Comment
 	if includeProduct && includeUser {
 		database.Preload("User").Preload("Product").Find(&comment, id)
@@ -65,7 +65,7 @@ func FetchCommentById(id int, includes ...bool) models.Comment {
 }
 
 func DeleteComment(condition interface{}) error {
-	database := infrastructure.GetDB()
+	database := infrastructure.GetDb()
 	err := database.Where(condition).Delete(models.Comment{}).Error
 	return err
 }

@@ -10,7 +10,7 @@ type CreateTag struct {
 	Description string `form:"description" binding:"required"`
 }
 
-func CreateTagListDto(tags []models.Tag) map[string]interface{} {
+func CreateTagListMapDto(tags []models.Tag) map[string]interface{} {
 	result := map[string]interface{}{}
 	var t = make([]interface{}, len(tags))
 	for i := 0; i < len(tags); i++ {
@@ -18,6 +18,14 @@ func CreateTagListDto(tags []models.Tag) map[string]interface{} {
 	}
 	result["tags"] = t
 	return CreateSuccessDto(result)
+}
+
+func CreateTagListDto(tags []models.Tag) []interface{} {
+	var t = make([]interface{}, len(tags))
+	for i := 0; i < len(tags); i++ {
+		t[i] = CreateTagDto(tags[i])
+	}
+	return t
 }
 
 func CreateTagDto(tag models.Tag) map[string]interface{} {

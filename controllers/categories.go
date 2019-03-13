@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/melardev/GoGonicEcommerceApi/dtos"
+	"github.com/melardev/GoGonicEcommerceApi/infrastructure"
 	"github.com/melardev/GoGonicEcommerceApi/middlewares"
 	"github.com/melardev/GoGonicEcommerceApi/models"
 	"github.com/melardev/GoGonicEcommerceApi/services"
-	"github.com/melardev/api_blog_app/infrastructure"
 	"io"
 	"log"
 	"net/http"
@@ -29,7 +29,7 @@ func CategoryList(c *gin.Context) {
 		c.JSON(http.StatusNotFound, dtos.CreateDetailedErrorDto("fetch_error", err))
 		return
 	}
-	c.JSON(http.StatusOK, dtos.CreateCategoryListDto(tags))
+	c.JSON(http.StatusOK, dtos.CreateCategoryListMapDto(tags))
 }
 
 func CreateCategory(c *gin.Context) {
@@ -87,7 +87,7 @@ func CreateCategory(c *gin.Context) {
 		categoryImages[index] = models.FileUpload{Filename: file.Filename, FilePath: string(filepath.Separator) + filePath, FileSize: fileSize}
 	}
 
-	database := infrastructure.GetDB()
+	database := infrastructure.GetDb()
 	category := models.Category{Name: name, Description: description, Images: categoryImages}
 
 	// TODO: Why it is performing a SELECT SQL Query per image?

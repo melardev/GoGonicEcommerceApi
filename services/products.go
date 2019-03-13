@@ -1,12 +1,12 @@
 package services
 
 import (
+	"github.com/melardev/GoGonicEcommerceApi/infrastructure"
 	"github.com/melardev/GoGonicEcommerceApi/models"
-	"github.com/melardev/api_blog_app/infrastructure"
 )
 
 func FetchProductsPage(page int, page_size int) ([]models.Product, int, []int, error) {
-	database := infrastructure.GetDB()
+	database := infrastructure.GetDb()
 	var products []models.Product
 	var count int
 	tx := database.Begin()
@@ -25,7 +25,7 @@ func FetchProductsPage(page int, page_size int) ([]models.Product, int, []int, e
 }
 
 func FetchProductDetails(condition interface{}, optional ...bool) models.Product {
-	database := infrastructure.GetDB()
+	database := infrastructure.GetDb()
 	var product models.Product
 
 	query := database.Where(condition).
@@ -66,13 +66,13 @@ func FetchProductDetails(condition interface{}, optional ...bool) models.Product
 
 func FetchProductId(slug string) (uint, error) {
 	productId := -1
-	database := infrastructure.GetDB()
+	database := infrastructure.GetDb()
 	err := database.Model(&models.Product{}).Where(&models.Product{Slug: slug}).Select("id").Row().Scan(&productId)
 	return uint(productId), err
 }
 
 func SetTags(product *models.Product, tags []string) error {
-	database := infrastructure.GetDB()
+	database := infrastructure.GetDb()
 	var tagList []models.Tag
 	for _, tag := range tags {
 		var tagModel models.Tag
@@ -87,19 +87,19 @@ func SetTags(product *models.Product, tags []string) error {
 }
 
 func Update(product *models.Product, data interface{}) error {
-	database := infrastructure.GetDB()
+	database := infrastructure.GetDb()
 	err := database.Model(product).Update(data).Error
 	return err
 }
 
 func DeleteProduct(condition interface{}) error {
-	db := infrastructure.GetDB()
+	db := infrastructure.GetDb()
 	err := db.Where(condition).Delete(models.Product{}).Error
 	return err
 }
 
 func FetchProductsIdNameAndPrice(productIds []uint) (products []models.Product, err error) {
-	database := infrastructure.GetDB()
+	database := infrastructure.GetDb()
 	err = database.Select([]string{"id", "name", "slug", "price"}).Find(&products, productIds).Error
 	return products, err
 }

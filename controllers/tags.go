@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/melardev/GoGonicEcommerceApi/dtos"
+	"github.com/melardev/GoGonicEcommerceApi/infrastructure"
 	"github.com/melardev/GoGonicEcommerceApi/middlewares"
 	"github.com/melardev/GoGonicEcommerceApi/models"
 	"github.com/melardev/GoGonicEcommerceApi/services"
-	"github.com/melardev/api_blog_app/infrastructure"
 	"math/rand"
 	"net/http"
 	"os"
@@ -28,7 +28,7 @@ func TagList(c *gin.Context) {
 		c.JSON(http.StatusNotFound, dtos.CreateDetailedErrorDto("fetch_error", err))
 		return
 	}
-	c.JSON(http.StatusOK, dtos.CreateTagListDto(tags))
+	c.JSON(http.StatusOK, dtos.CreateTagListMapDto(tags))
 }
 
 var letterRunes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
@@ -85,7 +85,7 @@ func CreateTag(c *gin.Context) {
 		tagImages[index] = models.FileUpload{Filename: fileName, OriginalName: file.Filename, FilePath: string(filepath.Separator) + filePath, FileSize: fileSize}
 	}
 
-	database := infrastructure.GetDB()
+	database := infrastructure.GetDb()
 	tag := models.Tag{Name: createForm.Name, Description: createForm.Description, Images: tagImages}
 	// TODO: Why it is performing a SELECT SQL Query per image?
 	// Even worse, it is selecting category_id, why??
