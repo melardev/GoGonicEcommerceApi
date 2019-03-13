@@ -5,16 +5,17 @@ import (
 	"errors"
 	"github.com/gin-gonic/gin"
 	"github.com/gosimple/slug"
-	"github.com/melardev/api_shop_gonic/models"
+	"github.com/melardev/GoGonicEcommerceApi/models"
+	"github.com/melardev/api_blog_app/infrastructure"
 	"os"
 	"path/filepath"
 	"regexp"
 	"strings"
 
-	"github.com/melardev/api_shop_gonic/dtos"
+	"github.com/melardev/GoGonicEcommerceApi/dtos"
 
-	"github.com/melardev/api_shop_gonic/middlewares"
-	"github.com/melardev/api_shop_gonic/services"
+	"github.com/melardev/GoGonicEcommerceApi/middlewares"
+	"github.com/melardev/GoGonicEcommerceApi/services"
 
 	"net/http"
 	"strconv"
@@ -33,26 +34,26 @@ func RegisterProductRoutes(router *gin.RouterGroup) {
 
 func ProductList(c *gin.Context) {
 
-	page_size_str := c.Query("page_size")
-	page_str := c.Query("page")
+	pageSizeStr := c.Query("page_size")
+	pageStr := c.Query("page")
 
-	page_size, err := strconv.Atoi(page_size_str)
+	pageSize, err := strconv.Atoi(pageSizeStr)
 	if err != nil {
-		page_size = 5
+		pageSize = 5
 	}
 
-	page, err := strconv.Atoi(page_str)
+	page, err := strconv.Atoi(pageStr)
 	if err != nil {
 		page = 1
 	}
 
-	productModels, modelCount, commentsCount, err := services.FetchProductsPage(page, page_size)
+	productModels, modelCount, commentsCount, err := services.FetchProductsPage(page, pageSize)
 	if err != nil {
 		c.JSON(http.StatusNotFound, dtos.CreateDetailedErrorDto("products", errors.New("Invalid param")))
 		return
 	}
 
-	c.JSON(http.StatusOK, dtos.CreatedProductPagedResponse(c.Request, productModels, page, page_size, modelCount, commentsCount))
+	c.JSON(http.StatusOK, dtos.CreatedProductPagedResponse(c.Request, productModels, page, pageSize, modelCount, commentsCount))
 }
 
 func GetProductDetailsBySlug(c *gin.Context) {
@@ -102,7 +103,7 @@ func CreateProduct(c *gin.Context) {
 	var categories = make([]models.Category, catCount)
 
 	var rgx = regexp.MustCompile(`\[(.*?)\]`)
-	database := models.GetDB()
+	database := infrastructure.GetDB()
 	tagPtr := 0
 	catPtr := 0
 

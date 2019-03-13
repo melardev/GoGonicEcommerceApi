@@ -6,16 +6,16 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	"github.com/joho/godotenv"
-	"github.com/melardev/api_shop_gonic/controllers"
-	"github.com/melardev/api_shop_gonic/middlewares"
-	"github.com/melardev/api_shop_gonic/models"
-	"github.com/melardev/api_shop_gonic/seeds"
+	"github.com/melardev/GoGonicEcommerceApi/controllers"
+	"github.com/melardev/GoGonicEcommerceApi/infrastructure"
+	"github.com/melardev/GoGonicEcommerceApi/middlewares"
+	"github.com/melardev/GoGonicEcommerceApi/models"
+	"github.com/melardev/GoGonicEcommerceApi/seeds"
 	"os"
 )
 
 func drop(db *gorm.DB) {
 	db.DropTableIfExists(
-
 		&models.FileUpload{},
 		&models.Comment{},
 		&models.OrderItem{}, &models.Order{}, &models.Address{},
@@ -93,13 +93,16 @@ func create(database *gorm.DB) {
 }
 
 func main() {
+
 	e := godotenv.Load() //Load .env file
 	if e != nil {
 		fmt.Print(e)
 	}
+	println(os.Getenv("DB_DIALECT"))
 
-	databse := models.Init()
-	defer databse.Close()
+	database := infrastructure.OpenDbConnection()
+
+	defer database.Close()
 	args := os.Args
 	if len(args) > 1 {
 		first := args[1]
@@ -109,42 +112,51 @@ func main() {
 		}
 
 		if first == "create" {
-			create(databse)
+			create(database)
 		} else if first == "seed" {
 			seeds.Seed()
 			os.Exit(0)
 		} else if first == "migrate" {
-			migrate(databse)
+			migrate(database)
 		}
 
 		if second == "seed" {
 			seeds.Seed()
 			os.Exit(0)
 		} else if first == "migrate" {
-			migrate(databse)
+			migrate(database)
+		}
+
+		if first != "" && second == "" {
+			os.Exit(0)
 		}
 	}
 
-	migrate(databse)
+	migrate(database)
 
 	// gin.New() - new gin Instance with no middlewares
-	// router.Use(gin.Logger())
-	// router.Use(gin.Recovery())
-	router := gin.Default() // gin with the Logger and Recovery Middlewares attached
-	router.Use(middlewares.Benchmark())
+	// goGonicEngine.Use(gin.Logger())
+	// goGonicEngine.Use(gin.Recovery())
+	goGonicEngine := gin.Default() // gin with the Logger and Recovery Middlewares attached
 	// Allow all Origins
-	router.Use(cors.Default())
-	router.Use(middlewares.UserLoaderMiddleware())
-	router.Static("/static", "./static")
-	apiRouteGroup := router.Group("/api")
+	goGonicEngine.Use(cors.Default())
+
+	goGonicEngine.Use(middlewares.Benchmark())
+
+	// goGonicEngine.Use(middlewares.Cors())
+
+	goGonicEngine.Use(middlewares.UserLoaderMiddleware())
+	goGonicEngine.Static("/static", "./static")
+	apiRouteGroup := goGonicEngine.Group("/api")
 
 	controllers.RegisterUserRoutes(apiRouteGroup.Group("/users"))
 	controllers.RegisterProductRoutes(apiRouteGroup.Group("/products"))
 	controllers.RegisterCommentRoutes(apiRouteGroup.Group("/"))
+	controllers.RegisterPageRoutes(apiRouteGroup.Group("/"))
 	controllers.RegisterAddressesRoutes(apiRouteGroup.Group("/users"))
 	controllers.RegisterTagRoutes(apiRouteGroup.Group("/tags"))
 	controllers.RegisterCategoryRoutes(apiRouteGroup.Group("/categories"))
 	controllers.RegisterOrderRoutes(apiRouteGroup.Group("/orders"))
 
-	router.Run(":8080") // listen and serve on 0.0.0.0:8080
+	goGonicEngine.Run(":8080") // listen and serve on 0.0.0.0:8080
 }

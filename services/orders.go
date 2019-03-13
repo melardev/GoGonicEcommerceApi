@@ -1,11 +1,12 @@
 package services
 
 import (
-	"github.com/melardev/api_shop_gonic/models"
+	"github.com/melardev/GoGonicEcommerceApi/models"
+	"github.com/melardev/api_blog_app/infrastructure"
 )
 
 func FetchOrdersPage(userId uint, page, pageSize int) (orders []models.Order, totalOrdersCount int, err error) {
-	database := models.GetDB()
+	database := infrastructure.GetDB()
 
 	totalOrdersCount = 0
 
@@ -43,7 +44,7 @@ func FetchOrdersPage(userId uint, page, pageSize int) (orders []models.Order, to
 }
 
 func FetchOrderDetails(orderId uint) (order models.Order, err error) {
-	database := models.GetDB()
+	database := infrastructure.GetDB()
 	err = database.Model(models.Order{}).Preload("OrderItems").First(&order, orderId).Error
 	var address models.Address
 	database.Model(&order).Related(&address)

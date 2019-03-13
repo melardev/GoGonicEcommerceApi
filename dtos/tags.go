@@ -1,7 +1,7 @@
 package dtos
 
 import (
-	"github.com/melardev/api_shop_gonic/models"
+	"github.com/melardev/GoGonicEcommerceApi/models"
 	"strings"
 )
 

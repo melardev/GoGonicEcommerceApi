@@ -1,4 +1,4 @@
-package models
+package infrastructure
 
 import (
 	"fmt"
@@ -19,7 +19,7 @@ type Database struct {
 var DB *gorm.DB
 
 // Opening a database and save the reference to `Database` struct.
-func Init() *gorm.DB {
+func OpenDbConnection() *gorm.DB {
 
 	dialect := os.Getenv("DB_DIALECT")
 	username := os.Getenv("DB_USER")
@@ -31,7 +31,7 @@ func Init() *gorm.DB {
 	if dialect == "sqlite3" {
 		db, err = gorm.Open("sqlite3", path.Join(".", "app.db"))
 	} else {
-		// db, err := gorm.Open("mysql", "root:root@/go_api_shop_gonic?charset=utf8")
+		// db, err := gorm.Open("mysql", "root:root@localhost/igo_api_shop_gonc?charset=utf8")
 		databaseUrl := fmt.Sprintf("host=%s user=%s password=%s dbname=%s sslmode=disable ", host, username, password, dbName)
 		db, err = gorm.Open(dialect, databaseUrl)
 	}
@@ -55,6 +55,6 @@ func RemoveDb(db *gorm.DB) error {
 }
 
 // Using this function to get a connection, you can create your connection pool here.
-func GetDB() *gorm.DB {
+func GetDb() *gorm.DB {
 	return DB
 }

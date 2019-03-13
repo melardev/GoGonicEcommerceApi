@@ -3,7 +3,8 @@ package seeds
 import (
 	"github.com/icrowley/fake"
 	"github.com/jinzhu/gorm"
-	"github.com/melardev/api_shop_gonic/models"
+	"github.com/melardev/GoGonicEcommerceApi/infrastructure"
+	"github.com/melardev/GoGonicEcommerceApi/models"
 	"golang.org/x/crypto/bcrypt"
 	"math/rand"
 	"time"
@@ -274,7 +275,7 @@ func seedOrders(db *gorm.DB) {
 }
 
 func Seed() {
-	db := models.GetDB()
+	db := infrastructure.GetDb()
 	rand.Seed(time.Now().UnixNano())
 	seedAdmin(db)
 	seedUsers(db)

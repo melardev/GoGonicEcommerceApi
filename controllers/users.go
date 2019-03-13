@@ -3,10 +3,10 @@ package controllers
 import (
 	"errors"
 	"github.com/gin-gonic/gin"
-	"github.com/melardev/api_shop_gonic/dtos"
-	"github.com/melardev/api_shop_gonic/services"
+	"github.com/melardev/GoGonicEcommerceApi/dtos"
+	"github.com/melardev/GoGonicEcommerceApi/services"
 
-	"github.com/melardev/api_shop_gonic/models"
+	"github.com/melardev/GoGonicEcommerceApi/models"
 
 	"golang.org/x/crypto/bcrypt"
 	"net/http"

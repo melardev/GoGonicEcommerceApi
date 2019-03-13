@@ -12,7 +12,7 @@ type Order struct {
 	Address   Address `gorm:"association_foreignkey:AddressId:"`
 	AddressId uint
 
-	User            User `gorm:"association_foreignkey:UserId:"`
+	User            User `gorm:"foreignKey:UserId:"`
 	UserId          uint `gorm:"default:null"`
 	OrderItemsCount int  `gorm:"-"`
 }

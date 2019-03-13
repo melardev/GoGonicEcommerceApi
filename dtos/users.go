@@ -1,7 +1,7 @@
 package dtos
 
 import (
-	"github.com/melardev/api_shop_gonic/models"
+	"github.com/melardev/GoGonicEcommerceApi/models"
 )
 
 type RegisterRequestDto struct {
@@ -19,15 +19,6 @@ type LoginRequestDto struct {
 	Password string `form:"password"json:"password" binding:"exists,min=8,max=255"`
 
 	userModel models.User `json:"-"`
-}
-
-// Declare your response schema here
-type ProfileResponse struct {
-	ID        uint    `json:"-"`
-	Username  string  `json:"username"`
-	Bio       string  `json:"bio"`
-	Image     *string `json:"image"`
-	Following bool    `json:"following"`
 }
 
 func CreateLoginSuccessful(user *models.User) map[string]interface{} {

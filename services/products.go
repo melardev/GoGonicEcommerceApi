@@ -1,11 +1,12 @@
 package services
 
 import (
-	"github.com/melardev/api_shop_gonic/models"
+	"github.com/melardev/GoGonicEcommerceApi/models"
+	"github.com/melardev/api_blog_app/infrastructure"
 )
 
 func FetchProductsPage(page int, page_size int) ([]models.Product, int, []int, error) {
-	database := models.GetDB()
+	database := infrastructure.GetDB()
 	var products []models.Product
 	var count int
 	tx := database.Begin()
@@ -24,9 +25,8 @@ func FetchProductsPage(page int, page_size int) ([]models.Product, int, []int, e
 }
 
 func FetchProductDetails(condition interface{}, optional ...bool) models.Product {
-	database := models.GetDB()
+	database := infrastructure.GetDB()
 	var product models.Product
-	// TODO: do I really need a transaction for querying ??
 
 	query := database.Where(condition).
 		Preload("Tags").Preload("Categories").Preload("Images").Preload("Comments")
@@ -66,13 +66,13 @@ func FetchProductDetails(condition interface{}, optional ...bool) models.Product
 
 func FetchProductId(slug string) (uint, error) {
 	productId := -1
-	database := models.GetDB()
+	database := infrastructure.GetDB()
 	err := database.Model(&models.Product{}).Where(&models.Product{Slug: slug}).Select("id").Row().Scan(&productId)
 	return uint(productId), err
 }
 
 func SetTags(product *models.Product, tags []string) error {
-	database := models.GetDB()
+	database := infrastructure.GetDB()
 	var tagList []models.Tag
 	for _, tag := range tags {
 		var tagModel models.Tag
@@ -87,19 +87,19 @@ func SetTags(product *models.Product, tags []string) error {
 }
 
 func Update(product *models.Product, data interface{}) error {
-	database := models.GetDB()
+	database := infrastructure.GetDB()
 	err := database.Model(product).Update(data).Error
 	return err
 }
 
 func DeleteProduct(condition interface{}) error {
-	db := models.GetDB()
+	db := infrastructure.GetDB()
 	err := db.Where(condition).Delete(models.Product{}).Error
 	return err
 }
 
 func FetchProductsIdNameAndPrice(productIds []uint) (products []models.Product, err error) {
-	database := models.GetDB()
+	database := infrastructure.GetDB()
 	err = database.Select([]string{"id", "name", "slug", "price"}).Find(&products, productIds).Error
 	return products, err
 }

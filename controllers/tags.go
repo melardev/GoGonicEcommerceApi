@@ -3,10 +3,11 @@ package controllers
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"github.com/melardev/api_shop_gonic/dtos"
-	"github.com/melardev/api_shop_gonic/middlewares"
-	"github.com/melardev/api_shop_gonic/models"
-	"github.com/melardev/api_shop_gonic/services"
+	"github.com/melardev/GoGonicEcommerceApi/dtos"
+	"github.com/melardev/GoGonicEcommerceApi/middlewares"
+	"github.com/melardev/GoGonicEcommerceApi/models"
+	"github.com/melardev/GoGonicEcommerceApi/services"
+	"github.com/melardev/api_blog_app/infrastructure"
 	"math/rand"
 	"net/http"
 	"os"
@@ -84,7 +85,7 @@ func CreateTag(c *gin.Context) {
 		tagImages[index] = models.FileUpload{Filename: fileName, OriginalName: file.Filename, FilePath: string(filepath.Separator) + filePath, FileSize: fileSize}
 	}
 
-	database := models.GetDB()
+	database := infrastructure.GetDB()
 	tag := models.Tag{Name: createForm.Name, Description: createForm.Description, Images: tagImages}
 	// TODO: Why it is performing a SELECT SQL Query per image?
 	// Even worse, it is selecting category_id, why??

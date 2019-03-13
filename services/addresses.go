@@ -1,11 +1,14 @@
 package services
 
-import "github.com/melardev/api_shop_gonic/models"
+import (
+	"github.com/melardev/GoGonicEcommerceApi/models"
+	"github.com/melardev/api_blog_app/infrastructure"
+)
 
 func FetchAddressesPage(userId uint, page, pageSize int, includeUser bool) ([]models.Address, int) {
 	var addresses []models.Address
 	var totalAddressesCount int
-	database := models.GetDB()
+	database := infrastructure.GetDB()
 	database.Model(&models.Address{}).Where(&models.Address{UserId: uint(userId)}).Count(&totalAddressesCount)
 	database.Where(&models.Address{UserId: uint(userId)}).
 		Offset((page - 1) * pageSize).Limit(pageSize).
@@ -36,13 +39,13 @@ func FetchAddressesPage(userId uint, page, pageSize int, includeUser bool) ([]mo
 }
 
 func FetchAddress(addressId uint) (address models.Address) {
-	database := models.GetDB()
+	database := infrastructure.GetDB()
 	database.First(&address, addressId)
 	return address
 }
 
 func FetchIdsFromAddress(addressId uint) (address models.Address) {
-	database := models.GetDB()
+	database := infrastructure.GetDB()
 	database.Select("id, user_id").First(&address, addressId)
 	return
 }

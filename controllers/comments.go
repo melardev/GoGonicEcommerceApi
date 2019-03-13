@@ -3,10 +3,11 @@ package controllers
 import (
 	"errors"
 	"github.com/gin-gonic/gin"
-	"github.com/melardev/api_shop_gonic/dtos"
-	"github.com/melardev/api_shop_gonic/middlewares"
-	"github.com/melardev/api_shop_gonic/models"
-	"github.com/melardev/api_shop_gonic/services"
+	"github.com/melardev/GoGonicEcommerceApi/dtos"
+	"github.com/melardev/GoGonicEcommerceApi/middlewares"
+	"github.com/melardev/GoGonicEcommerceApi/models"
+	"github.com/melardev/GoGonicEcommerceApi/services"
+	"github.com/melardev/api_blog_app/infrastructure"
 
 	"net/http"
 	"strconv"
@@ -28,7 +29,7 @@ func RegisterCommentRoutes(router *gin.RouterGroup) {
 
 func ListComments(c *gin.Context) {
 	slug := c.Param("slug")
-	database := models.GetDB()
+	database := infrastructure.GetDB()
 	productId := -1
 
 	err := database.Model(&models.Product{}).Where(&models.Product{Slug: slug}).Select("id").Row().Scan(&productId)
@@ -36,21 +37,21 @@ func ListComments(c *gin.Context) {
 		c.JSON(http.StatusNotFound, dtos.CreateDetailedErrorDto("comments", errors.New("invalid slug")))
 		return
 	}
-	page_size_str := c.Query("page_size")
-	page_str := c.Query("page")
+	pageSizeStr := c.Query("page_size")
+	pageStr := c.Query("page")
 
-	page_size, err := strconv.Atoi(page_size_str)
+	pageSize, err := strconv.Atoi(pageSizeStr)
 	if err != nil {
-		page_size = 5
+		pageSize = 5
 	}
 
-	page, err := strconv.Atoi(page_str)
+	page, err := strconv.Atoi(pageStr)
 	if err != nil {
 		page = 1
 	}
-	comments, totalCommentCount := services.FetchCommentsPage(productId, page, page_size)
+	comments, totalCommentCount := services.FetchCommentsPage(productId, page, pageSize)
 
-	c.JSON(http.StatusOK, dtos.CreateCommentPagedResponse(c.Request, comments, page, page_size, totalCommentCount, true, false))
+	c.JSON(http.StatusOK, dtos.CreateCommentPagedResponse(c.Request, comments, page, pageSize, totalCommentCount, true, false))
 }
 
 func CreateComment(c *gin.Context) {
@@ -102,7 +103,7 @@ func DeleteComment(c *gin.Context) {
 
 	id64, err := strconv.ParseUint(c.Param("id"), 10, 32)
 	id := uint(id64)
-	database := models.GetDB()
+	database := infrastructure.GetDB()
 	var comment models.Comment
 	err = database.Select([]string{"id", "user_id"}).Find(&comment, id).Error
 	if err != nil || comment.ID == 0 {
